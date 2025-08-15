@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitzplatzverteilung Bundestagswahl 2025</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            padding: 2rem 1rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+        
+        .chart-wrapper {
+            flex: 3;
+            min-width: 300px;
+            max-width: 600px;
+            height: 400px;
+            position: relative;
+        }
+        
+        .legend {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .legend h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .legend-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .color-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            margin-right: 0.75rem;
+        }
+        
+        .party-name {
+            font-weight: 500;
+        }
+        
+        .legend-right {
+            text-align: right;
+        }
+        
+        .seats {
+            font-weight: 700;
+            color: #1f2937;
+        }
+        
+        .percentage {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .total {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e5e7eb;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .turnout {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .changes {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #eff6ff;
+            border-radius: 8px;
+        }
+        
+        .changes h4 {
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        
+        .changes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .change-up { color: #059669; }
+        .change-down { color: #dc2626; }
+        .change-neutral { color: #6b7280; }
+        
+        @media (max-width: 768px) {
+            .chart-container {
+                flex-direction: column;
+            }
+            
+            .chart-wrapper {
+                height: 300px;
+            }
+            
+            .changes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sitzplatzverteilung Bundestagswahl 2025</h1>
+            <p>21. Deutscher Bundestag - Wahl vom 23. Februar 2025</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="chart-container">
+                <div class="chart-wrapper">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                
+                <div class="legend">
+                    <h3>Sitzverteilung</h3>
+                    
+                    <div class="legend-item">
+                        <div class="legend-left">
+                            <div class="color-box" style="background-color: #32CD32;"></div>
+                            <span class="party-name">CDU</span>
+                        </div>
+                        <div class="legend-right">
+                            <div class="seats">164 Sitze</div>
+                            <div class="percentage">26,2%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-left">
+                            <div class="color-box" style="background-color: #0066CC;"></div>
+                            <span class="party-name">AfD</span>
+                        </div>
+                        <div class="legend-right">
+                            <div class="seats">152 Sitze</div>
+                            <div class="percentage">24,3%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-left">
+                            <div class="color-box" style="background-color: #E3000F;"></div>
+                            <span class="party-name">SPD</span>
+                        </div>
+                        <div class="legend-right">
+                            <div class="seats">120 Sitze</div>
+                            <div class="percentage">19,2%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-left">
+                            <div class="color-box" style="background-color: #46962B;"></div>
+                            <span class="party-name">GRÜNE</span>
+                        </div>
+                        <div class="legend-right">
+                            <div class="seats">85 Sitze</div>
+                            <div class="percentage">13,6%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-left">
+                            <div class="color-box" style="background-color: #BE3075;"></div>
+                            <span class="party-name">Die Linke</span>
+                        </div>
+                        <div class="legend-right">
+                            <div class="seats">64 Sitze</div>
+                            <div class="percentage">10,2%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-left">
+                            <div class="color-box" style="background-color: #008AC5;"></div>
+                            <span class="party-name">CSU</span>
+                        </div>
+                        <div class="legend-right">
+                            <div class="seats">44 Sitze</div>
+                            <div class="percentage">7,0%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-item">
+                        <div class="legend-left">
+                            <div class="color-box" style="background-color: #FFED00;"></div>
+                            <span class="party-name">SSW</span>
+                        </div>
+                        <div class="legend-right">
+                            <div class="seats">1 Sitz</div>
+                            <div class="percentage">0,2%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="total">
+                        <div class="total-row">
+                            <span>Gesamt:</span>
+                            <span>630 Sitze</span>
+                        </div>
+                        <div class="turnout">
+                            Wahlbeteiligung: 82,5% (+6,2% vs. 2021)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="changes">
+                <h4>Wichtige Veränderungen zur Wahl 2021:</h4>
+                <div class="changes-grid">
+                    <div><span class="change-up">▲ AfD:</span> +69 Sitze (+10,4%)</div>
+                    <div><span class="change-down">▼ SPD:</span> -86 Sitze (-9,3%)</div>
+                    <div><span class="change-up">▲ Die Linke:</span> +25 Sitze (+3,9%)</div>
+                    <div><span class="change-down">▼ GRÜNE:</span> -33 Sitze (-3,1%)</div>
+                    <div><span class="change-up">▲ CDU:</span> +12 Sitze (+3,6%)</div>
+                    <div><span class="change-neutral">FDP & BSW:</span> Nicht im Bundestag (< 5%)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Daten für das Kuchendiagramm
+        const data = {
+            labels: ['CDU', 'AfD', 'SPD', 'GRÜNE', 'Die Linke', 'CSU', 'SSW'],
+            datasets: [{
+                data: [164, 152, 120, 85, 64, 44, 1],
+                backgroundColor: [
+                    '#32CD32',  // CDU
+                    '#0066CC',  // AfD
+                    '#E3000F',  // SPD
+                    '#46962B',  // GRÜNE
+                    '#BE3075',  // Die Linke
+                    '#008AC5',  // CSU
+                    '#FFED00'   // SSW
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        };
+
+        // Konfiguration für das Diagramm
+        const config = {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false // Wir verwenden eine eigene Legende
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} Sitze (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '30%',
+                // Custom Plugin für Labels
+                animation: {
+                    onComplete: function() {
+                        const chart = this;
+                        const ctx = chart.ctx;
+                        
+                        ctx.font = 'bold 12px Arial';
+                        ctx.fillStyle = 'white';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        
+                        chart.data.datasets.forEach(function(dataset, i) {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach(function(element, index) {
+                                const data = dataset.data[index];
+                                const total = dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = (data / total) * 100;
+                                
+                                // Nur Labels für Segmente > 5% anzeigen
+                                if (percentage > 5) {
+                                    const position = element.tooltipPosition();
+                                    const label = chart.data.labels[index];
+                                    
+                                    ctx.fillText(label, position.x, position.y);
+                                }
+                            });
+                        });
+                    }
+                }
+            }
+        };
+
+        // Diagramm erstellen
+        const ctx = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctx, config);
+    </script>
+</body>
+</html>
